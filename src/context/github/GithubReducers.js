@@ -11,7 +11,7 @@ const GithubReducers = (state,action)=>
             case 'ON_LOADING':
                 return {...state,
                
-                loading: action.payload
+                loading: true
     
     
                 } 
@@ -19,15 +19,17 @@ const GithubReducers = (state,action)=>
             case 'ON_CLEAR':
                   return{
                         ...state,
-                        users:action.payload
+                        users:[]
                   }   
                   
-            case 'GET_USER':
+            case 'GET_USER_REPOS':
                   return{
                         ...state,
-                        user:action.payload,
+                        user:action.payload.user,
+                        repos:action.payload.repos,
                         loading:false
-                  }      
+                  }   
+                      
         default:
               return state;
       }

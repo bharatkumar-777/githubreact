@@ -1,19 +1,35 @@
 import { useContext, useEffect } from "react";
 import GithubContext from "../context/github/GithubContext";
+
+import {getUserandRepos} from "../context/github/GithubAction";
 import { useParams } from "react-router-dom";
 
 import { FaCodepen, FaStore, FaUser, FaUserFriends } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Spinner from "../components/layout/Spinner";
 
+import RepoList from '../components/repos/ReposList'
 const User = () => {
-  const { getUser, user, loading } = useContext(GithubContext);
+  const {user, loading,dispatch,repos} = useContext(GithubContext);
   const params = useParams();
   useEffect(() => {
-    getUser(params.login);
-  }, []);
+      dispatch({type: 'ON_LOADING'})
+    const getData = async () => {
+        
+       
+        const userData= await getUserandRepos(params.login);
+        dispatch({type: 'GET_USER_REPOS',payload:userData})
+     
+        
+        
+
+    }  
+    getData()
+    
+    
+  }, [params.login,dispatch]);
   if (loading) {
-    return <Spinner />;
+    return <Spinner />; 
   }
   const {
     name,
@@ -119,20 +135,20 @@ const User = () => {
               </div>
               <div className="stat">
                   <div className="stat-figure text-secondary">
-                      <FaUserFriends className="text-3xl md:text-5xl"/>
+                      <FaCodepen className="text-3xl md:text-5xl"/>
                   </div>
                   <div className="state-title pr-5">Repos</div>
                   <div className="stat-value pr-5 text-3xl md:text-5xl">{public_repos}</div>
               </div>
               <div className="stat">
                   <div className="stat-figure text-secondary">
-                      <FaUserFriends className="text-3xl md:text-5xl"/>
+                      <FaStore className="text-3xl md:text-5xl"/>
                   </div>
                   <div className="state-title pr-5">Gists</div>
                   <div className="stat-value pr-5 text-3xl md:text-5xl">{public_gists}</div>
               </div>
           </div>
-          
+          <RepoList repos={repos} /> 
       </div>
     </>
   );
